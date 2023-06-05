@@ -1,0 +1,19 @@
+{
+  "name": "mortalkombatgame",
+  "version": "1.0.0",
+  "description": "demo game of mortal kombat",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1", 
+    "start": "nodemon server.js"
+  },
+  "author": "Andre",
+  "license": "ISC",
+  "dependencies": {
+    "express": "3.x.x",
+    "socket.io": "0.9.x"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
