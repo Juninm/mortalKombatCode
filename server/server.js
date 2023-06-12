@@ -29,8 +29,19 @@ Request = {
 io.sockets.on("connection", (socket) => {
     socket.on(Requests.CREATE_GAME, (gameName) => {
         if(games.createGame(gameName)){
-         games.getName(gameName).addPlayer(socket);
-         socket.emit('response', Responses.SUCCESS);
+      const game = game.getGame(gameName);
+      if ( !game ) {
+            socket.emit('response', Response.GAME_NOT_EXISTS);
+
+        
+
+      } else {
+        if (game.addPlayer(socket)) {
+          socket.emit('Response', Response.SUCCESS);
+          
+        }
+          
+      }
 
 
 
@@ -38,11 +49,10 @@ io.sockets.on("connection", (socket) => {
             socket.emit('response', Reponses.GAME_EXISTS)
 
         }
-        socket.on(Requests.CREATE_GAME, (gameName) => {
-         
+      });
 
-
-        })
-    })
+      socket.on(Requests.CREATE_GAME, (gameName) => {
+            
+      })
 })
 
