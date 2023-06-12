@@ -1,2 +1,2 @@
 # mortalKombatCode
-mortal kombat game code so you can use
+mortal kombat game code for public do whatever they want. .-.

@@ -4,7 +4,7 @@ const server = require('http').createServer(app);
 const io = require("socket.io").listen(server);
 // const GameCollection = require("./games.js");
 
-const port = 4836;
+const port = 5555;
 
 app.configure(() => {
   app.use(express.static(__dirname + '/../game'))
@@ -12,47 +12,41 @@ app.configure(() => {
 
 server.listen(port, () => {
   console.log(`Rodando no link: http://localhost:${port}`);
-})
- 
-const Reponses = {
+});
+
+const Responses = {
   SUCCESS: 0,
   GAME_EXISTS: 1,
   GAME_NOT_EXISTS: 2,
-  GAME_FULL: 3,  
+  GAME_FULL: 3,
 },
 
-Request = {
-    CREATE_GAME:'create-game',
-    JOIN_GAME:'join-game',
-}
+  Requests = {
+    CREATE_GAME: 'create-game',
+    JOIN_GAME: 'join-game',
+  }
 
 io.sockets.on("connection", (socket) => {
-    socket.on(Requests.CREATE_GAME, (gameName) => {
-        if(games.createGame(gameName)){
-      const game = game.getGame(gameName);
-      if ( !game ) {
-            socket.emit('response', Response.GAME_NOT_EXISTS);
+  socket.on(Requests.CREATE_GAME, (gameName) => {
+    if (games.createGame(gameName)) {
+      games.getName(gameName).addPlayer(socket);
+      socket.emit('response', Responses.SUCCESS);
+    } else {
+      socket.emit('response', Responses.GAME_EXISTS);
+    }
+  });
 
-        
-
+  socket.on(Requests.CREATE_GAME, (gameName) => {
+    const game = games.getGame(gameName);
+    if (!game) {
+      socket.emit('response', Responses.GAME_NOT_EXISTS);
+    } else {
+      if (game.addPlayer(socket)) {
+        socket.emit('response', Responses.SUCCESS);
       } else {
-        if (game.addPlayer(socket)) {
-          socket.emit('Response', Response.SUCCESS);
-          
-        }
-          
+        socket.emit('response', Responses.GAME_FULL);
       }
+    }
+  });
 
-
-
-        } else {
-            socket.emit('response', Reponses.GAME_EXISTS)
-
-        }
-      });
-
-      socket.on(Requests.CREATE_GAME, (gameName) => {
-            
-      })
-})
-
+});
