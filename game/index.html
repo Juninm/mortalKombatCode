@@ -1,14 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>Pet's Fury</title> 
-<link rel="stylesheet" href="style.css">
+
+    <title>Pet's Fury</title>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    <script src="games.js"></script>
+    <table>
+
+        <thead>
+            <th>
+                arena
+            </th>
+            <th>
+                WebCam
+            </th>
+
+
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <div id="parent">
+                        <div id="utils">
+                            <div id="player1Name" class="playerName">Sub-Zero</div>
+                            <div id="player1LifeBar" class="lifebar">
+                                <div class="life" id="player1Life"></div>
+                            </div>
+                            <div id="player2Name" class="playerName">Kano</div>
+                            <div id="player2LifeBar" class="lifebar">
+                                <div class="life" id="player2Life"></div>
+                            </div>
+                        </div>
+                        <div id="arena">
+                        </div>
+                        <div id="loading">
+                            <span class="loadingLabel">Loading...</span>
+                        </div>
+                    </div>
+                </td>
+                <td id="webcam-parent">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <h1>Instruções</h1>
+                    <p>
+                    <ul class="instructions-list">
+                        <li>Para jogar com reconhecimento de gestos, você precisa do Google Chrome 22+ ou Firefox 19+.
+                        </li>
+                        <li>Escolha o local adequado para posicionar o computador. Eu recomendo que você use uma parede
+                            branca como fundo e roupas escuras para melhor contraste.</li>
+                        <li>Fique fora do escopo da webcam. Ele precisa capturar o plano de fundo atrás de você em
+                            primeiro lugar.</li>
+                        <li>Permitir que a página da web use sua webcam.</li>
+                        <li>Se a tela da webcam estiver preta, você pode começar a jogar, caso contrário, reinicie e
+                            tente novamente.</li>
+                        <li>Fique a cerca de 2,5 metros de distância do seu computador no meio da zona de visualização.
+                        </li>
+                        <li>Para caminhar para a esquerda, fique no lado esquerdo da região de visualização da webcam e
+                            para a direita se quiser caminhar para a direita. Se quiser parar, volte no meio.</li>
+                        <li>Levante o braço esquerdo ou direito para socar.</li>
+                        <li>Levante a perna esquerda ou direita para chutar.</li>
+                        <li>Agache e seu lutador também agachará.</li>
+                        <li>Agachamento e soco para ataque de soco baixo agachado.</li>
+                        <li>Aproveite! <gif> </gif>
+                        </li>
+
+                    </ul>
+                    </p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="manual">
+    </div>
+    <script>
+        (function () {
+
+            function $(id) {
+                return document.getElementById(id);
+            }
+
+            function setLife(container, life) {
+                container.style.width = life + '%';
+            }
+
+            document.onkeydown = function (e) {
+                if (e.keyCode === 32) {
+                    window.location.reload();
+                }
+            };
+
+            (function () {
+
+                var startGame = function () {
+                    $('loading').style.visibility = 'hidden';
+                    $('arena').style.visibility = 'visible';
+                    $('utils').style.visibility = 'visible';
+                };
+
+                var options = {
+                    arena: {
+                        container: document.getElementById('arena'),
+                        arena: mk.arenas.types.THRONE_ROOM
+                    },
+                    fighters: [{ name: 'Dog4Foog' }, { name: 'Silent Cat' }],
+                    callbacks: {
+                        attack: function (f, o, l) {
+                            if (o.getName() === 'kano') {
+                                setLife($('player2Life'), o.getLife());
+                            } else {
+                                setLife($('player1Life'), o.getLife());
+                            }
+                        }
+
+                    },
+                    isHost: /^sim$/i.test(prompt('você vai ser o anfitrião?')),
+                    gameName: prompt('Digite o nome do jogo:'),
+                    gameType: 'network'
+                };
+
+                function startNewGame() {
+                    mk.start(options).ready(function () {
+                        startGame();
+                    });
+                }
+
+                startNewGame();
+
+            }());
+
+        }());
+    </script>
+    <script src="./src/js/movimentos.js"></script>
+    <script src="./src/js/pf.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
 </body>
+
 </html>
